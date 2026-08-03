@@ -1,6 +1,6 @@
 ---
 name: webtools
-description: 配置 Ollama Cloud API key 并开关 web 工具（ollama_web_search / ollama_web_fetch）。可带参数 on/off/enable/disable 直接切换，或 key 配置 API key，不带参数则进入交互菜单。
+description: 配置 Ollama Cloud API key 并开关 web 工具（ollama_web_search / ollama_web_fetch）。可带参数 on/off/enable/disable 直接切换，key 配置 API key，不带参数则弹出二选一菜单。
 disable-model-invocation: true
 argument-hint: [on|off|enable|disable|key]
 allowed-tools:
@@ -11,50 +11,29 @@ allowed-tools:
 
 # /ollama-cloud:webtools
 
-你正在管理 Ollama Cloud web 工具的配置。配置文件位于用户主目录下的
-`~/.claude/ollama-cloud.json`，是一个 JSON 对象，字段：
+**第一轮立即调用 AskUserQuestion（见「无参数」或「配置 API key」），不要先读取配置文件、不要输出说明性文字。** 仅当参数为 `on`/`off`/`enable`/`disable` 时才跳过 AskUserQuestion，直接进入「合并并保存」。
 
-- `apiKey` (string)：Ollama Cloud API key
-- `webTools` (boolean)：是否启用 web 工具，默认 `true`
+配置文件 `~/.claude/ollama-cloud.json` 是一个 JSON 对象，字段：`apiKey` (string，Ollama Cloud API key)、`webTools` (boolean，是否启用 web 工具，默认 `true`)。MCP server 在每次工具调用时都重新读取这个文件，因此本命令的修改即时生效，无需重载插件。
 
-MCP server（`mcp-server.mjs`）在每次工具调用时都会重新读取这个文件，因此本命令
-对 key 或开关的修改会即时生效，无需重载插件。
+## 参数分支
 
-## 第 1 步：定位配置文件并读取当前状态
+参数 `$ARGUMENTS`（已去空格并转小写）可能是以下之一：
 
-运行下面的命令获取配置文件的绝对路径（跨平台，使用 Node 的 `os.homedir()`）：
+- `on` / `enable`：直接进入「合并并保存」，写入 `webTools = true`。
+- `off` / `disable`：直接进入「合并并保存」，写入 `webTools = false`。
+- `key`：直接进入「配置 API key」。
+- 为空：进入「无参数」。
 
-```bash
-node -p "require('os').homedir()+'/.claude/ollama-cloud.json'"
-```
+## 无参数
 
-记下输出的路径（下文称作 `$CONFIG`）。然后用 Read 工具读取 `$CONFIG`；若文件不
-存在，则视为空配置 `{}`（`apiKey` 未设置、`webTools` 默认 `true`）。
+立即用 AskUserQuestion 向用户展示一个问题（单选，header 为「操作」），不先读配置：
 
-## 第 2 步：根据参数决定流程
+> 对 Ollama Cloud web 工具做什么？
 
-参数 `$ARGUMENTS`（已去空格并转小写）可能是以下之一：`on`/`enable`、`off`/`disable`、
-`key`、或为空。
-
-- `on` / `enable`：直接跳到「设置 webTools = true 并保存」。
-- `off` / `disable`：直接跳到「设置 webTools = false 并保存」。
-- `key`：直接跳到「配置 API key」。
-- 为空：进入「交互菜单」。
-
-## 交互菜单
-
-使用 AskUserQuestion 向用户展示一个问题（单选，header 为「操作」）：
-
-> 你想对 Ollama Cloud web 工具做什么？当前状态：API key = {已设置/未设置}，web 工具 = {已启用/已禁用}。
-
-选项（按当前状态调整措辞，保持这四个语义）：
+选项：
 
 1. 「配置 / 替换 API key」—— 进入「配置 API key」
-2. 「启用 web 工具」—— 进入「设置 webTools = true 并保存」（若已启用则提示无需更改）
-3. 「禁用 web 工具」—— 进入「设置 webTools = false 并保存」（若已禁用则提示无需更改）
-4. 「查看状态」—— 仅展示当前状态后结束
-
-在问题文本里把当前状态写清楚，方便用户判断。
+2. 「切换 web 工具开关」—— 进入「切换开关」
 
 ## 配置 API key
 
@@ -71,16 +50,33 @@ node -p "require('os').homedir()+'/.claude/ollama-cloud.json'"
 用户选择 Other 粘贴的文本即为 API key。拿到 key 后进入「合并并保存」（写入
 `apiKey` 字段）。不要把 key 原文回显到对话里，确认时只说「API key 已保存」。
 
-## 设置 webTools = true / false 并保存
+## 切换开关
 
-进入「合并并保存」，写入对应 `webTools` 值。完成后用一句话告知用户结果，例如：
-「web 工具已启用，ollama_web_search / ollama_web_fetch 现在可用。」或
-「web 工具已禁用，工具调用将返回禁用提示。」
+先运行下面的命令取得配置文件绝对路径（跨平台）：
+
+```bash
+node -p "require('os').homedir()+'/.claude/ollama-cloud.json'"
+```
+
+记下路径（下文称作 `$CONFIG`），用 Read 读取；文件不存在则视为空配置 `{}`（`webTools`
+默认 `true`）。再用 AskUserQuestion（单选，header 为「web 工具」），问题文本写清当前状态：
+
+> web 工具当前：{已启用/已禁用}。设为？
+
+选项：
+
+1. 「启用」—— 进入「合并并保存」，写入 `webTools = true`
+2. 「禁用」—— 进入「合并并保存」，写入 `webTools = false`
+
+保存后用一句话告知结果，例如：「web 工具已启用，ollama_web_search / ollama_web_fetch
+现在可用。」或「web 工具已禁用，工具调用将返回禁用提示。」若已是目标状态则提示无需更改。
 
 ## 合并并保存
 
-把当前配置与新字段合并（保留未改动的字段），用 Write 工具把合并后的 JSON 写入
-`$CONFIG`。格式化为两空格缩进、末尾换行的 JSON。例如设置 key 后写入：
+若尚未取得 `$CONFIG`，先运行上面的 `node -p "require('os').homedir()+'/.claude/ollama-cloud.json'"`
+取得路径，并用 Read 读取当前配置（不存在视为 `{}`）。把当前配置与新字段合并（保留未改动的
+字段），用 Write 工具把合并后的 JSON 写入 `$CONFIG`。格式化为两空格缩进、末尾换行的 JSON。
+例如设置 key 后写入：
 
 ```json
 {

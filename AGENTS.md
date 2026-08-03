@@ -59,6 +59,7 @@ This is a Claude Code plugin. The split is intentional, do not collapse it:
 ## Slash Command
 
 - `commands/webtools.md` is a skill whose body is injected as a prompt. It must not assume any state beyond what it reads from the config file.
+- The body opens with an imperative instruction to call `AskUserQuestion` on the first turn; the no-arg path pops a two-choice prompt (configure API key / toggle the web tools) without reading the config first, so the first turn is the prompt rather than a read.
 - Resolve the config path cross-platform via `node -p "require('os').homedir()+'/.claude/ollama-cloud.json'"` rather than hardcoding `~`, so the absolute path works with the `Read`/`Write` tools on Windows too.
 - Never echo the API key back into the conversation. Confirm with "API key 已保存" only.
 - The skill supports direct arguments (`on`/`off`/`enable`/`disable`/`key`) to skip the menu.

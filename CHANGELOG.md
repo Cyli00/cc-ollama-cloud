@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- `/ollama-cloud:webtools` no-arg flow streamlined: the first turn now pops a two-choice `AskUserQuestion` (configure API key / toggle the web tools) instead of reading the config file first and showing a four-option menu, reducing model deliberation before the prompt appears.
 - Initial release as a Claude Code plugin (`cc-ollama-cloud`). Provides `ollama_web_search` and `ollama_web_fetch` MCP tools powered by the Ollama Cloud web API, and a `/ollama-cloud:webtools` slash command to configure the API key and toggle the web tools on/off.
 - Zero-dependency Node MCP server (`mcp-server.mjs`, stdio JSON-RPC) calling `https://ollama.com/api/web_search` and `/api/web_fetch`.
 - Configuration in `~/.claude/ollama-cloud.json` (`apiKey`, `webTools`), re-read on every tool call so changes take effect immediately. `OLLAMA_API_KEY`, `OLLAMA_WEB_TOOLS`, and `OLLAMA_CLOUD_CONFIG` env vars supported as overrides.

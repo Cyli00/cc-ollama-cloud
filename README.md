@@ -49,9 +49,10 @@ git clone https://github.com/Cyli00/cc-ollama-cloud ~/.claude/skills/ollama-clou
    /ollama-cloud:webtools
    ```
 
-   Choose **Configure / replace API key** and paste your key. It is stored in
-   `~/.claude/ollama-cloud.json`. (If you prefer not to write the key to disk, set the
-   `OLLAMA_API_KEY` environment variable instead — the server reads it as a fallback.)
+   Pick **Configure / replace API key** and paste your key (choose "Other" to paste it).
+   It is stored in `~/.claude/ollama-cloud.json`. (If you prefer not to write the key to
+   disk, set the `OLLAMA_API_KEY` environment variable instead — the server reads it as a
+   fallback.) The other option toggles the web tools on/off.
 
 3. **Toggle the web tools** (optional) — the same command lets you enable/disable the
    tools. You can also pass an argument directly:
@@ -97,7 +98,7 @@ call `https://ollama.com/api/web_search` and `https://ollama.com/api/web_fetch`
 respectively, authenticating with your API key.
 
 The `/ollama-cloud:webtools` slash command is a skill that reads/writes the config file on
-your behalf: it asks what you want to do (set key / enable / disable / view status) and
+your behalf: it opens a two-choice prompt (configure API key / toggle the web tools) and
 updates `~/.claude/ollama-cloud.json`. Because the server re-reads that file on each tool
 call, the toggle and key changes are reflected immediately.
 
