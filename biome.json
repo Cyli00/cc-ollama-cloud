@@ -5,12 +5,7 @@
     "rules": {
       "preset": "recommended",
       "style": {
-        "noNonNullAssertion": "off",
         "useConst": "error"
-      },
-      "suspicious": {
-        "noExplicitAny": "off",
-        "noEmptyInterface": "off"
       }
     }
   },
@@ -21,6 +16,6 @@
     "lineWidth": 120
   },
   "files": {
-    "includes": ["*.ts", "*.json", "!**/node_modules"]
+    "includes": ["*.mjs", "*.json", "!**/node_modules"]
   }
 }

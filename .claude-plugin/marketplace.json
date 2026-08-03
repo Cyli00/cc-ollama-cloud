@@ -1,0 +1,19 @@
+{
+  "name": "cc-ollama-cloud",
+  "description": "Claude Code plugins for Ollama Cloud — web search and web fetch tools.",
+  "owner": { "name": "Kusu" },
+  "plugins": [
+    {
+      "name": "ollama-cloud",
+      "source": {
+        "source": "github",
+        "repo": "Cyli00/cc-ollama-cloud",
+        "ref": "main"
+      },
+      "description": "Web search and web fetch tools powered by the Ollama Cloud API, plus a slash command to configure your API key and toggle the web tools on/off.",
+      "version": "0.1.0",
+      "category": "web",
+      "tags": ["ollama", "web-search", "web-fetch", "mcp"]
+    }
+  ]
+}

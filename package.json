@@ -1,48 +1,29 @@
 {
-  "name": "pi-ollama-cloud",
-  "version": "0.7.0",
+  "name": "cc-ollama-cloud",
+  "version": "0.1.0",
+  "description": "Claude Code plugin: web search and web fetch tools powered by the Ollama Cloud API.",
   "type": "module",
   "keywords": [
-    "pi-package"
-  ],
-  "files": [
-    "index.ts",
-    "config.ts",
-    "models.ts",
-    "models.generated.ts",
-    "pricing.generated.ts",
-    "thinking-levels.ts",
-    "utils.ts",
-    "web-tools.ts",
-    "CHANGELOG.md",
-    "README.md",
-    "LICENSE"
+    "claude-code",
+    "claude-code-plugin",
+    "ollama",
+    "web-search",
+    "web-fetch",
+    "mcp"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fgrehm/pi-ollama-cloud.git"
+    "url": "git+https://github.com/Cyli00/cc-ollama-cloud.git"
   },
   "scripts": {
     "check": "biome check --write .",
     "lint": "biome check .",
     "format": "biome format --write .",
     "test": "vitest run",
-    "smoke:web-tools": "tsx scripts/smoke-web-tools.ts",
-    "generate-models": "tsx scripts/generate-pricing.ts && tsx scripts/generate-models.ts && biome format --write models.generated.ts pricing.generated.ts"
-  },
-  "pi": {
-    "extensions": [
-      "./index.ts"
-    ]
-  },
-  "peerDependencies": {
-    "@earendil-works/pi-coding-agent": "*",
-    "@earendil-works/pi-tui": "*",
-    "@sinclair/typebox": "*"
+    "smoke:mcp": "node scripts/smoke-mcp.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "2",
-    "tsx": "^4.19.0",
-    "vitest": "^4.1.6"
+    "vitest": "^4.1.10"
   }
 }

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "ollama-cloud",
+  "displayName": "Ollama Cloud Web Tools",
+  "version": "0.1.0",
+  "description": "Web search and web fetch tools powered by the Ollama Cloud API, plus a slash command to configure your API key and toggle the web tools on/off.",
+  "author": { "name": "Kusu" },
+  "license": "MIT",
+  "keywords": ["ollama", "web-search", "web-fetch", "mcp"],
+  "defaultEnabled": true,
+  "commands": ["./commands/"],
+  "mcpServers": "./.mcp.json"
+}
